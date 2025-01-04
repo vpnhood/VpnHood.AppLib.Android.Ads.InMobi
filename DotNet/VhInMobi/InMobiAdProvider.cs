@@ -16,6 +16,8 @@ public class InMobiAdProvider(string accountId, string placementId, TimeSpan ini
     public AppAdType AdType => AppAdType.InterstitialAd;
     public DateTime? AdLoadedTime { get; private set; }
     public TimeSpan AdLifeSpan { get; } = TimeSpan.FromMinutes(45);
+    public static int RequiredAndroidVersion => InMobiUtil.RequiredAndroidVersion;
+    public static bool IsAndroidVersionSupported => InMobiUtil.IsAndroidVersionSupported;
 
     public static InMobiAdProvider Create(string accountId, string placementId, TimeSpan initializeTimeout, bool isDebugMode)
     {
