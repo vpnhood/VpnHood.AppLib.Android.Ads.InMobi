@@ -12,4 +12,11 @@
   <ItemGroup>
     <ProjectReference Include="..\VhInMobi\VpnHood.AppLib.Android.Ads.InMobi.csproj" />
   </ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<PublishTrimmed>True</PublishTrimmed>
+		<RunAOTCompilation>True</RunAOTCompilation>
+		<RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
+	</PropertyGroup>
+
 </Project>
