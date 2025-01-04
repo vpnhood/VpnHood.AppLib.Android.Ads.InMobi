@@ -38,7 +38,7 @@ public class InMobiAdProvider(string accountId, string placementId, bool isDebug
         _inMobiAdProvider = InMobiAdServiceFactory.Create(Java.Lang.Long.ValueOf(placementId))
                              ?? throw new AdException($"The {AdType} ad is not initialized");
 
-        // initialize
+        // Load Ad
         var loadAdTask = await AndroidUtil.RunOnUiThread(activity, () =>  _inMobiAdProvider.LoadAd(activity)!.AsTask())
             .WaitAsync(cancellationToken)
             .ConfigureAwait(false);

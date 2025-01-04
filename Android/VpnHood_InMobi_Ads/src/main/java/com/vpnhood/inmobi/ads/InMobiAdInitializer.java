@@ -25,7 +25,7 @@ class InMobiAdInitializer {
             InMobiSdk.setLogLevel(InMobiSdk.LogLevel.DEBUG);
 
         InMobiSdk.init(context, accountId, consentObject, error -> {
-            if (null != error) {
+            if (error != null) {
                 Log.e(TAG, "InMobi Init failed -" + error.getMessage());
                 task.completeExceptionally(error);
             } else {
