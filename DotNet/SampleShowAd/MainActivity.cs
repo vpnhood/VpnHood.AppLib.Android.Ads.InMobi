@@ -21,7 +21,7 @@ public class MainActivity : ActivityEvent
     private async Task ShowAd()
     {
         try {
-            _inMobiAdProvider = InMobiAdProvider.Create(InMobiCredential.AccountId, InMobiCredential.PlacementId, true);
+            _inMobiAdProvider = InMobiAdProvider.Create(InMobiCredential.AccountId, InMobiCredential.PlacementId, TimeSpan.FromSeconds(5), true);
             await _inMobiAdProvider.LoadAd(new AndroidUiContext(this), CancellationToken.None);
             await _inMobiAdProvider.ShowAd(new AndroidUiContext(this), string.Empty, CancellationToken.None);
         }

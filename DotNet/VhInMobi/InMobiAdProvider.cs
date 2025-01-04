@@ -7,7 +7,7 @@ using VpnHood.Core.Common.Exceptions;
 
 namespace VpnHood.AppLib.Droid.Ads.VhInMobi;
 
-public class InMobiAdProvider(string accountId, string placementId, bool isDebugMode) 
+public class InMobiAdProvider(string accountId, string placementId, TimeSpan initializeTimeout, bool isDebugMode) 
     : IAppAdProvider
 {
     private IInMobiAdProvider? _inMobiAdProvider;
@@ -17,9 +17,9 @@ public class InMobiAdProvider(string accountId, string placementId, bool isDebug
     public DateTime? AdLoadedTime { get; private set; }
     public TimeSpan AdLifeSpan { get; } = TimeSpan.FromMinutes(45);
 
-    public static InMobiAdProvider Create(string accountId, string placementId, bool isDebugMode)
+    public static InMobiAdProvider Create(string accountId, string placementId, TimeSpan initializeTimeout, bool isDebugMode)
     {
-        var ret = new InMobiAdProvider(accountId, placementId, isDebugMode);
+        var ret = new InMobiAdProvider(accountId, placementId, initializeTimeout, isDebugMode);
         return ret;
     }
     
@@ -34,7 +34,7 @@ public class InMobiAdProvider(string accountId, string placementId, bool isDebug
         AdLoadedTime = null;
 
         // initialize
-        await InMobiUtil.Initialize(activity, accountId, isDebugMode, cancellationToken);
+        await InMobiUtil.Initialize(activity, accountId, isDebugMode, initializeTimeout, cancellationToken);
         _inMobiAdProvider = InMobiAdServiceFactory.Create(Java.Lang.Long.ValueOf(placementId))
                              ?? throw new AdException($"The {AdType} ad is not initialized");
 
