@@ -1,6 +1,6 @@
 ﻿using Com.Vpnhood.Inmobi.Ads;
-using VpnHood.Core.Common.Utils;
 using VpnHood.Core.Client.Device.Droid.Utils;
+using VpnHood.Core.Toolkit.Utils;
 
 namespace VpnHood.AppLib.Droid.Ads.VhInMobi;
 

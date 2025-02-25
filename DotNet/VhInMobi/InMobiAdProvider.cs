@@ -1,8 +1,8 @@
 ﻿using Com.Vpnhood.Inmobi.Ads;
 using VpnHood.AppLib.Abstractions;
-using VpnHood.Core.Client.Device;
 using VpnHood.Core.Client.Device.Droid;
 using VpnHood.Core.Client.Device.Droid.Utils;
+using VpnHood.Core.Client.Device.UiContexts;
 using VpnHood.Core.Common.Exceptions;
 
 namespace VpnHood.AppLib.Droid.Ads.VhInMobi;
