@@ -1,5 +1,6 @@
 ﻿using Com.Vpnhood.Inmobi.Ads;
 using VpnHood.AppLib.Abstractions;
+using VpnHood.AppLib.Abstractions.AdExceptions;
 using VpnHood.Core.Client.Device.Droid;
 using VpnHood.Core.Client.Device.Droid.Utils;
 using VpnHood.Core.Client.Device.UiContexts;
@@ -52,7 +53,7 @@ public class InMobiAdProvider(string accountId, string placementId, TimeSpan ini
         AdLoadedTime = DateTime.Now;
     }
 
-    public async Task ShowAd(IUiContext uiContext, string? customData, CancellationToken cancellationToken)
+    public async Task<ShowAdResult> ShowAd(IUiContext uiContext, string? customData, CancellationToken cancellationToken)
     {
         var appUiContext = (AndroidUiContext)uiContext;
         var activity = appUiContext.Activity;
@@ -72,6 +73,8 @@ public class InMobiAdProvider(string accountId, string placementId, TimeSpan ini
             await showAdTask
                 .WaitAsync(cancellationToken)
                 .ConfigureAwait(false);
+
+            return ShowAdResult.Closed;
         }
         finally
         {
