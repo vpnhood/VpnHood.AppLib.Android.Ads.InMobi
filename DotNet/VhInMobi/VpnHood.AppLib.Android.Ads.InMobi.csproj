@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Description>VpnHood Android Ad Library for InMobi</Description>
-		<TargetFramework>net9.0-android35.0</TargetFramework>
+		<TargetFramework>net9.0-android36.0</TargetFramework>
 		<SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
 		<RootNamespace>VpnHood.AppLib.Droid.Ads.VhInMobi</RootNamespace>
 	</PropertyGroup>
@@ -33,12 +33,12 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="VpnHood.AppLib.Abstractions" Version="6.0.673" />
-		<PackageReference Include="VpnHood.Core.Client.Device.Android" Version="6.0.673" />
-		<PackageReference Include="Square.Picasso" Version="2.8.0.16" />
-		<PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0" />
-		<PackageReference Include="Xamarin.AndroidX.Browser" Version="1.8.0.8" />
-		<PackageReference Include="Xamarin.AndroidX.ViewPager" Version="1.1.0.1" />
-		<PackageReference Include="Xamarin.GooglePlayServices.Ads.Identifier" Version="118.2.0.1" />
+		<PackageReference Include="VpnHood.AppLib.Abstractions" Version="7.3.755" />
+		<PackageReference Include="VpnHood.Core.Client.Device.Android" Version="7.3.755" />
+		<PackageReference Include="Square.Picasso" Version="2.8.0.20" />
+		<PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.3" />
+		<PackageReference Include="Xamarin.AndroidX.Browser" Version="1.9.0" />
+		<PackageReference Include="Xamarin.AndroidX.ViewPager" Version="1.1.0.4" />
+		<PackageReference Include="Xamarin.GooglePlayServices.Ads.Identifier" Version="118.2.0.4" />
 	</ItemGroup>
 </Project>
