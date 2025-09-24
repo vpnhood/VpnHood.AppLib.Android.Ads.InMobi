@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0"
+agp = "8.11.0"
 browser = "1.8.0"
 inmobiAdsKotlin = "10.7.7"
 junit = "4.13.2"
