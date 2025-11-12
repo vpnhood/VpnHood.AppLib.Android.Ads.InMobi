@@ -6,45 +6,68 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: write
+
 jobs:
   build:
-  
-    env:
-        BUILD_CONFIG: 'Release'
-        PROJECT_NAME: 'DotNet/VhInMobi'
-
     runs-on: ubuntu-latest
+    env:
+      BUILD_CONFIG: 'Release'
 
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Bump versions
-      uses: SiqiLu/dotnet-bump-version@2.0.0
+    - name: Checkout
+      uses: actions/checkout@v4
       with:
-        version_files: "**/*.InMobi.csproj"
-        version_mask: 0.0.1.0
-        version_overwrite: "*.*.*.*"
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-   
+        fetch-depth: 0
+        persist-credentials: true
+
+    - name: Bump version and push
+      if: github.event_name == 'push'
+      shell: pwsh
+      run: |
+        #1) Read PubVersion.json, increment build, and save
+        $pubVersionFile = Join-Path $env:GITHUB_WORKSPACE 'Pub/PubVersion.json'
+        $pub = Get-Content $pubVersionFile -Raw | ConvertFrom-Json
+        $v = [version]::Parse($pub.Version)
+        $newV = [version]::new($v.Major, $v.Minor, ($v.Build + 1))
+        $pub.Version = $newV.ToString(3)
+        $pub | ConvertTo-Json -Depth 5 | Set-Content -Path $pubVersionFile -Encoding UTF8
+        Write-Host "New version: $($pub.Version)"
+
+        #2) Apply this version to all C# project files
+        $csprojFiles = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.csproj -File
+        foreach ($proj in $csprojFiles) {
+          Write-Host "Setting version $($pub.Version) in: $($proj.FullName)"
+          $xml = New-Object XML
+          $xml.PreserveWhitespace = $true
+          $xml.Load($proj.FullName)
+          $versionNode = $xml.SelectSingleNode("Project/PropertyGroup/Version")
+          if ($null -eq $versionNode) { throw "Version node not found or invalid format in project file: $($proj.FullName)" }
+          $versionNode.InnerText = $pub.Version
+          $xml.Save($proj.FullName)
+        }
+
+        #3) Commit and push using the version from PubVersion.json
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add -A
+        git commit -m "chore: bump version $($pub.Version)"
+        git push
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
-
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v2
-
-    - name: Android SDK
-      run: dotnet workload install android
+        dotnet-version: 10.0.x
 
     - name: Restore dependencies
-      run: dotnet restore $PROJECT_NAME
+      run: dotnet restore
 
     - name: Build Solution
-      run: dotnet build $PROJECT_NAME --no-restore --configuration $BUILD_CONFIG
+      run: dotnet build --no-restore --configuration $BUILD_CONFIG
 
     - name: Pack All Projects
-      run: dotnet pack $PROJECT_NAME --configuration $BUILD_CONFIG -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack --configuration $BUILD_CONFIG -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Publish
-      run: dotnet nuget push "**/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{secrets.NUGET_API_KEY_ADS}}
+      run: dotnet nuget push "**/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }}
