@@ -45,7 +45,7 @@ jobs:
           
           # Check if IsPackable is true (or not set, which defaults to true)
           $isPackableNode = $xml.SelectSingleNode("Project/PropertyGroup/IsPackable")
-          if ($null -ne $isPackableNode -and $isPackableNode.InnerText -ne "true") {
+          if ($isPackableNode -ne $null -and $isPackableNode.InnerText -eq "false") {
             Write-Host "Skipping non-packable project: $($proj.FullName)"
             continue
           }
