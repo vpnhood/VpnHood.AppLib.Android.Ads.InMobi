@@ -69,7 +69,7 @@ jobs:
         dotnet-version: 10.0.x
 
     - name: Restore dependencies
-      run: dotnet restore DotNet
+      run: dotnet restore DotNet/VpnHood.AppLib.Android.Ads.InMobi.sln
 
     - name: Build Solution
       run: dotnet build DotNet --no-restore --configuration $BUILD_CONFIG
