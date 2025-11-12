@@ -72,10 +72,10 @@ jobs:
       run: dotnet restore
 
     - name: Build Solution
-      run: dotnet build --no-restore --configuration $BUILD_CONFIG
+      run: dotnet build DotNet --no-restore --configuration $BUILD_CONFIG
 
     - name: Pack All Projects
-      run: dotnet pack --configuration $BUILD_CONFIG -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack DotNet --configuration $BUILD_CONFIG -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Publish
       run: dotnet nuget push "**/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }}
