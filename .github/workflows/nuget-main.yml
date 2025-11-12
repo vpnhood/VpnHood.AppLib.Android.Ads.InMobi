@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BUILD_CONFIG: 'Release'
+      SOLUTION_NAME: 'DotNet'
 
     steps:
     - name: Checkout
@@ -68,14 +69,20 @@ jobs:
       with:
         dotnet-version: 10.0.x
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+
+    - name: Android SDK
+      run: dotnet workload install android
+
     - name: Restore dependencies
-      run: dotnet restore DotNet/VpnHood.AppLib.Android.Ads.InMobi.sln
+      run: dotnet restore $SOLUTION_NAME
 
     - name: Build Solution
-      run: dotnet build DotNet --no-restore --configuration $BUILD_CONFIG
+      run: dotnet build $SOLUTION_NAME --no-restore --configuration $BUILD_CONFIG
 
     - name: Pack All Projects
-      run: dotnet pack DotNet --configuration $BUILD_CONFIG -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack $SOLUTION_NAME --configuration $BUILD_CONFIG -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Publish
       run: dotnet nuget push "**/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_API_KEY }}
