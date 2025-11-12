@@ -35,13 +35,21 @@ jobs:
         $pub | ConvertTo-Json -Depth 5 | Set-Content -Path $pubVersionFile -Encoding UTF8
         Write-Host "New version: $($pub.Version)"
 
-        #2) Apply this version to all C# project files
+        #2) Apply this version to all C# project files that are packable
         $csprojFiles = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.csproj -File
         foreach ($proj in $csprojFiles) {
-          Write-Host "Setting version $($pub.Version) in: $($proj.FullName)"
           $xml = New-Object XML
           $xml.PreserveWhitespace = $true
           $xml.Load($proj.FullName)
+          
+          # Check if IsPackable is true (or not set, which defaults to true)
+          $isPackableNode = $xml.SelectSingleNode("Project/PropertyGroup/IsPackable")
+          if ($null -ne $isPackableNode -and $isPackableNode.InnerText -ne "true") {
+            Write-Host "Skipping non-packable project: $($proj.FullName)"
+            continue
+          }
+          
+          Write-Host "Setting version $($pub.Version) in: $($proj.FullName)"
           $versionNode = $xml.SelectSingleNode("Project/PropertyGroup/Version")
           if ($null -eq $versionNode) { throw "Version node not found or invalid format in project file: $($proj.FullName)" }
           $versionNode.InnerText = $pub.Version
